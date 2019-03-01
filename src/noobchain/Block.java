@@ -16,10 +16,14 @@ public class Block {
 	public Block(String previousHash ) {
 		this.previousHash = previousHash;
 		this.timeStamp = new Date().getTime();
+
 		
-		this.hash = calculateHash(); //Making sure we do this after we set the other values.
+		this.hash = calculateHash();//Making sure we do this after we set the other values.
+
+//		System.out.println("Private key is: "+this.hash);
+//		System.out.println("Public key is: "+this.previousHash);
 	}
-	
+
 	//Calculate new hash based on blocks contents
 	public String calculateHash() {
 		String calculatedhash = StringUtil.applySha256( 

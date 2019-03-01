@@ -1,9 +1,11 @@
 package noobchain;
+import javax.xml.bind.SchemaOutputResolver;
 import java.security.Security;
 import java.util.ArrayList;
 //import java.util.Base64;
 import java.util.HashMap;
 //import com.google.gson.GsonBuilder;
+import java.util.Iterator;
 import java.util.Map;
 
 public class NoobChain {
@@ -15,6 +17,11 @@ public class NoobChain {
 	public static float minimumTransaction = 0.1f;
 	public static Wallet walletA;
 	public static Wallet walletB;
+	public static Wallet walletC;
+	public static Wallet walletD;
+	public static Wallet walletVoter1;
+	public static Wallet walletVoter2;
+	public static Wallet walletCandidate;
 	public static Transaction genesisTransaction;
 
 	public static void main(String[] args) {	
@@ -23,11 +30,18 @@ public class NoobChain {
 		
 		//Create wallets:
 		walletA = new Wallet();
-		walletB = new Wallet();		
+		walletB = new Wallet();
+		walletC = new Wallet("C");
+		walletD = new Wallet();
+		walletVoter1=new Wallet();
+		walletVoter2=new Wallet();
+		walletCandidate=new Wallet();
+		int choice;
 		Wallet coinbase = new Wallet();
 		
 		//create genesis transaction, which sends 100 NoobCoin to walletA: 
 		genesisTransaction = new Transaction(coinbase.publicKey, walletA.publicKey, 100f, null);
+		//genesisTransaction = new Transaction(coinbase.publicKey, walletC.publicKey, 100f, null);
 		genesisTransaction.generateSignature(coinbase.privateKey);	 //manually sign the genesis transaction	
 		genesisTransaction.transactionId = "0"; //manually set the transaction id
 		genesisTransaction.outputs.add(new TransactionOutput(genesisTransaction.reciepient, genesisTransaction.value, genesisTransaction.transactionId)); //manually add the Transactions Output
@@ -35,9 +49,12 @@ public class NoobChain {
 		
 		System.out.println("Creating and Mining Genesis block... ");
 		Block genesis = new Block("0");
+		//Block genesis2 = new Block("0");
 		genesis.addTransaction(genesisTransaction);
+		//genesis2.addTransaction(genesisTransaction);
 		addBlock(genesis);
-		
+		//addBlock(genesis2);
+
 		//testing
 		Block block1 = new Block(genesis.hash);
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
@@ -46,21 +63,89 @@ public class NoobChain {
 		addBlock(block1);
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
 		System.out.println("WalletB's balance is: " + walletB.getBalance());
-		
+
+//		Block block4 = new Block(genesis.hash);
+//		System.out.println("\nWalletC's balance is: " + walletA.getBalance());
+//		System.out.println("\nWalletC is Attempting to send funds (50) to WalletB...");
+//		block4.addTransaction(walletC.sendFunds(walletB.publicKey, 50f));
+//		addBlock(block4);
+//		System.out.println("\nWalletC's balance is: " + walletA.getBalance());
+//		System.out.println("WalletB's balance is: " + walletB.getBalance());
+//		System.out.println("WalletC's balance is: " + walletC.getBalance());
+
+
+
+
+
 		Block block2 = new Block(block1.hash);
 		System.out.println("\nWalletA Attempting to send more funds (1000) than it has...");
 		block2.addTransaction(walletA.sendFunds(walletB.publicKey, 1000f));
 		addBlock(block2);
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
 		System.out.println("WalletB's balance is: " + walletB.getBalance());
-		
+
 		Block block3 = new Block(block2.hash);
-		System.out.println("\nWalletB is Attempting to send funds (20) to WalletA...");
-		block3.addTransaction(walletB.sendFunds( walletA.publicKey, 20));
+		System.out.println("\nWalletA is Attempting to send funds (20) to WalletC...");
+		block3.addTransaction(walletA.sendFunds( walletC.publicKey, 20));
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
-		System.out.println("WalletB's balance is: " + walletB.getBalance());
-		
+		System.out.println("WalletC's balance is: " + walletC.getBalance());
+
+
+		Block block5 = new Block(block3.hash);
+		System.out.println("\nWalletA is Attempting to send funds (20) to WalletC...");
+		block5.addTransaction(walletA.sendFunds( walletD.publicKey, 5));
+		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
+		System.out.println("WalletD's balance is: " + walletD.getBalance());
+
+
 		isChainValid();
+
+//		switch (choice){
+//			case 1:
+//				System.out.println("Show user");
+//
+//				break;
+//
+//
+//
+//		}
+		ArrayList allUsers=AllUsers.getAllUsers();
+		Iterator iterator=allUsers.iterator();
+		System.out.println("Shiv:  "+allUsers);
+		for (int i=0;i<allUsers.size()-1;i++){
+			System.out.println("All: "+allUsers.get(i).toString());
+		}
+//		while (iterator.hasNext()){
+//			System.out.println("UserType : "+iterator.next());
+//			System.out.println("Public Key Shiv: "+iterator.next());
+//		}
+
+
+//		Block block1 = new Block(genesis.hash);
+//		System.out.println("\nWalletVoters1's balance is: " + walletVoter1.getBalance());
+//		System.out.println("\nWalletVoter1 is Attempting to send funds (1) to WalletCandidate");
+//		block1.addTransaction(walletVoter1.sendFunds(walletCandidate.publicKey, 1f));
+//		addBlock(block1);
+//		System.out.println("\nWalletVoters1's balance is: " + walletVoter1.getBalance());
+//		System.out.println("WalletCandidates's balance is: " + walletCandidate.getBalance());
+//
+//		Block block2 = new Block(block1.hash);
+//		System.out.println("\nWalletVoters1's balance is: " + walletVoter1.getBalance());
+//		System.out.println("\nWalletVoters1 is Attempting to send funds (1) to Walletcandidate.");
+//		block1.addTransaction(walletVoter1.sendFunds(walletCandidate.publicKey, 1f));
+//		addBlock(block2);
+//		System.out.println("\nWalletVoters1's balance is: " + walletVoter1.getBalance());
+//		System.out.println("WalletCandidate's balance is: " + walletCandidate.getBalance());
+//
+//		Block block3= new Block(block2.hash);
+//		System.out.println("\nWalletVoters2's balance is: " + walletVoter2.getBalance());
+//		System.out.println("\nWalletVoters2 is Attempting to send funds (1) to Walletcandidate.");
+//		block1.addTransaction(walletVoter2.sendFunds(walletCandidate.publicKey, 1f));
+//		addBlock(block3);
+//		System.out.println("\nWalletVoters2's balance is: " + walletVoter2.getBalance());
+//		System.out.println("WalletCandidate's balance is: " + walletCandidate.getBalance());
+
+		//isChainValid();
 		
 	}
 	
@@ -145,6 +230,7 @@ public class NoobChain {
 	public static void addBlock(Block newBlock) {
 		newBlock.mineBlock(difficulty);
 		blockchain.add(newBlock);
+
 	}
 }
 

@@ -9,11 +9,17 @@ public class Wallet {
 	
 	public PrivateKey privateKey;
 	public PublicKey publicKey;
+	public String userType;
 	
 	public HashMap<String,TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>();
 	
 	public Wallet() {
 		generateKeyPair();
+		this.userType="U";
+	}
+	public Wallet(String userType) {
+		generateKeyPair();
+		this.userType=userType;
 	}
 		
 	public void generateKeyPair() {
@@ -26,7 +32,9 @@ public class Wallet {
 	        KeyPair keyPair = keyGen.generateKeyPair();
 	        // Set the public and private keys from the keyPair
 	        privateKey = keyPair.getPrivate();
+//			System.out.println("Private from keypair: "+this.toString());
 	        publicKey = keyPair.getPublic();
+	        AllUsers.addUser(this);
 	        
 		}catch(Exception e) {
 			throw new RuntimeException(e);
@@ -69,7 +77,11 @@ public class Wallet {
 		
 		return newTransaction;
 	}
-	
+
+	@Override
+	public String toString() {
+		return ""+userType+" "+publicKey;
+	}
 }
 
 
